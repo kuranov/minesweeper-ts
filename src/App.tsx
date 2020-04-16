@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import './App.css';
+import './App.sass';
 import Menu from './components/Menu/Menu';
 import Panel from './components/Panel/Panel';
 import Minefield from './components/Minefield/Minefield';
@@ -13,10 +13,10 @@ function App() {
 
   return (
     <div className="App">
-      <Panel />
-      <div className="minefiled-container">
-        <Menu />
-        <Minefield {...minefieldProps} ></Minefield>
+      <Menu />
+      <div className="App-board">
+        <Panel />
+        <Minefield {...minefieldProps} />
       </div>
   </div>
   );
