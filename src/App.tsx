@@ -1,25 +1,24 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { FunctionComponent } from 'react';
 import './App.css';
+import Menu from './components/Menu/Menu';
+import Panel from './components/Panel/Panel';
+import Minefield from './components/Minefield/Minefield';
 
 function App() {
+  const minefieldProps = {
+    cols: 15,
+    rows: 15,
+    mines: 10
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <Panel />
+      <div className="minefiled-container">
+        <Menu />
+        <Minefield {...minefieldProps} ></Minefield>
+      </div>
+  </div>
   );
 }
 
