@@ -9,12 +9,21 @@ interface IMinefieldProps {
   // onWin: Function;
 }
 
+interface ITileData {
+  x: number;
+  y: number;
+  isMine: boolean;
+  isOpen: boolean;
+  isFlagged: boolean;
+  minesAround: number;
+}
+
 interface IMinesMap {
   [key: string]: boolean;
 }
 
 const Minefield = ({width, height, mines}: IMinefieldProps) => {
-  const [tilesGrid, setTilesGrid] = useState<ITileProps[][] | null>(null);
+  const [tilesGrid, setTilesGrid] = useState<ITileData[][] | null>(null);
   const [flagsCount, setFlagsCount] = useState<number>(0); 
 
   console.log('tilesGrid', tilesGrid);
@@ -28,9 +37,7 @@ const Minefield = ({width, height, mines}: IMinefieldProps) => {
         minesAround: findMinesAround(plantedMines, x, y),
         isMine: isMine(plantedMines, x, y),
         isFlagged: false,
-        isOpen: true,
-        // onClick: (x, y, flagAction) => tileClickHanlder(x, y, flagAction)
-        onClick: tileClickHandler
+        isOpen: false
       };
     });
 
@@ -39,58 +46,55 @@ const Minefield = ({width, height, mines}: IMinefieldProps) => {
   }, [width, height, mines]);
 
   const tileClickHandler = (x: number, y: number, flagAction: boolean) => {
-    // debugger;
+    debugger;
     console.log('Click', x, y, flagAction);
     if (!tilesGrid) {
       return;
     }
     let cell = tilesGrid[y][x];
-    
-    if (flagAction && !cell.isOpen && !cell.isFlagged && flagsCount) {
-      cell.isFlagged = true;
-      setFlagsCount(flagsCount - 1);
-      setTilesGrid(tilesGrid);
-    } else if (flagAction && !cell.isOpen && cell.isFlagged) {
-      cell.isFlagged = false;
-      setFlagsCount(flagsCount + 1);
-      setTilesGrid(tilesGrid);
-    } else if (!flagAction && !cell.isOpen && cell.isFlagged) {
-      // …
-    } else if (!cell.isOpen && cell.isMine) {
-      cell.isOpen = true;
-      alert('BOOM');
+    console.log('cell', cell);
+
+    if (!cell.isOpen && flagAction) {
+      if (cell.isFlagged) {
+        cell.isFlagged = false;
+        setFlagsCount(flagsCount => flagsCount + 1);
+      } else {
+        cell.isFlagged = true;
+        setFlagsCount(flagsCount => flagsCount - 1);
+      }
     } 
-    // else if (!cell.) {
-
-    // }
-
-    let updatedGrid = openEmptyNeighbours(tilesGrid, x, y);
-    if (tilesGrid?.length) {
-      tilesGrid[0][0].isOpen = true;
+    if (!cell.isOpen) {
+      cell.isOpen = true;
+      if (cell.isMine) {
+        alert('BOOM');
+      } else if (cell.minesAround === 0) {
+        openEmptyNeighbours(x, y);
+      }
     }
+    setTilesGrid(tilesGrid);
   };
 
   const isWin = () => {
     // let cont
   };
 
-  const openEmptyNeighbours = (grid: ITileProps[][], x: number, y: number): ITileProps[][] => {
+  const openEmptyNeighbours = (x: number, y: number): ITileData[][] | null => {
     for(let i = -1; i <= 1; i++) {
       for(let j = -1; j <= 1; j++) {
           if (j === 0 && i === 0) {
               continue;
           }
           let checkX = x + i, checkY = y + j;
-          if (grid[checkY] && grid[checkY][checkX]) {
-            let cell = grid[checkY][checkX];
+          if (tilesGrid && tilesGrid[checkY] && tilesGrid[checkY][checkX]) {
+            let cell = tilesGrid[checkY][checkX];
             if (!cell.isOpen && cell.minesAround === 0) {
               cell.isOpen = true;
-              openEmptyNeighbours(grid, checkX, checkY);
+              openEmptyNeighbours(checkX, checkY);
             }
           }
       }
     }
-    return grid;
+    return tilesGrid;
   };
 
   const isMine = (mines: IMinesMap, x: number, y: number): boolean => {
@@ -112,7 +116,7 @@ const Minefield = ({width, height, mines}: IMinefieldProps) => {
     return bombsAround;
   };
 
-  const generateTilesGrid = (width: number, height: number, cb: (x: number, y: number) => ITileProps): ITileProps[][] => {
+  const generateTilesGrid = (width: number, height: number, cb: (x: number, y: number) => ITileData): ITileData[][] => {
     const rows = [];
     for (let i = 0; i < height; i++) {
       const cells = [];
@@ -137,15 +141,15 @@ const Minefield = ({width, height, mines}: IMinefieldProps) => {
     return mines;
   };
 
-  const renderTilesGrid = (grid: ITileProps[][] | null) => {
-    if (grid === null ){
+  const renderTilesGrid = () => {
+    if (tilesGrid === null ){
       return null;
     }
-    return grid.map((row) => <div>{row.map((props) => <Tile key={props.x + '-' + props.y} {...props} />)}</div>);
+    return tilesGrid.map((row, i) => <div key={i}>{row.map((props) => <Tile key={props.x + '-' + props.y} {...props} onClick={tileClickHandler} />)}</div>);
   };
 
   return (
-    <div key="Minefield" className="Minefield">{renderTilesGrid(tilesGrid)}</div>
+    <div key="Minefield" className="Minefield">{renderTilesGrid()}</div>
   );
 }
 
