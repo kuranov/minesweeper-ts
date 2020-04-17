@@ -2,18 +2,30 @@ import React, { useState } from 'react';
 import './Menu.sass'
 
 interface IMenuProps {
-  onGameStart: Function;
+  onGameStarted: (width: number, height: number, mines: number) => void;
+  
+  // Shows menu with message if type is 'string', 
+  // if 'true' — just show menu,
+  // if 'false' — hide menu
+  display: string | boolean; 
 }
 
-const Menu = ({onGameStart}: IMenuProps) => {
+const Menu = ({onGameStarted, display}: IMenuProps) => {
   const [width, setWidthValue] = useState(10);
   const [height, setHeightValue] = useState(10);
   const [mines, setMinesValue] = useState(4);
-
+  
+  let menuMessage;
+  if (typeof display === 'string') {
+    menuMessage = <div className="Menu-message">
+      {display}
+    </div>;
+  }
+  
   return (
-    <div className="Menu">
+    <div className="Menu" style={{display: display !== false ? 'flex' : 'none'}}>
       <div className="Menu-panel">
-        
+       {menuMessage}
         <div className="Menu-field">
           <label htmlFor="width">Width</label>
           <input id="width" placeholder="" value={width} 
@@ -33,7 +45,7 @@ const Menu = ({onGameStart}: IMenuProps) => {
         </div>
 
         <div className="Menu-field">
-          <div className="Menu-btn" onClick={() => onGameStart(width, height, mines)}>New game</div>
+          <div className="Menu-btn" onClick={() => onGameStarted(width, height, mines)}>New game</div>
         </div>
       </div>
     </div>

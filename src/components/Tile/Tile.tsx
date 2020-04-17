@@ -20,7 +20,6 @@ const Tile = ({x, y, isMine, isOpen, isFlagged, minesAround, onClick}: ITileProp
   } else if (!isOpen && isFlagged) {
     label = '⚑';
   }
-
   return (
     <div className="Tile" onClick={(e) => onClick(x, y, e.shiftKey)}>
       <div className="Tile-content">{label}</div>
