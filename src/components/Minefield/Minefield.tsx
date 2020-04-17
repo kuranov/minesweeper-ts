@@ -28,22 +28,73 @@ const Minefield = ({width, height, mines}: IMinefieldProps) => {
         minesAround: findMinesAround(plantedMines, x, y),
         isMine: isMine(plantedMines, x, y),
         isFlagged: false,
-        isOpen: false,
-        onClick: (x, y) => tileClickHanlder(x, y)
+        isOpen: true,
+        // onClick: (x, y, flagAction) => tileClickHanlder(x, y, flagAction)
+        onClick: tileClickHandler
       };
     });
+
     setFlagsCount(mines);
     setTilesGrid(tilesGrid);
   }, [width, height, mines]);
 
-  const tileClickHanlder = (x: number, y: number) => {
+  const tileClickHandler = (x: number, y: number, flagAction: boolean) => {
+    // debugger;
+    console.log('Click', x, y, flagAction);
+    if (!tilesGrid) {
+      return;
+    }
+    let cell = tilesGrid[y][x];
+    
+    if (flagAction && !cell.isOpen && !cell.isFlagged && flagsCount) {
+      cell.isFlagged = true;
+      setFlagsCount(flagsCount - 1);
+      setTilesGrid(tilesGrid);
+    } else if (flagAction && !cell.isOpen && cell.isFlagged) {
+      cell.isFlagged = false;
+      setFlagsCount(flagsCount + 1);
+      setTilesGrid(tilesGrid);
+    } else if (!flagAction && !cell.isOpen && cell.isFlagged) {
+      // …
+    } else if (!cell.isOpen && cell.isMine) {
+      cell.isOpen = true;
+      alert('BOOM');
+    } 
+    // else if (!cell.) {
+
+    // }
+
+    let updatedGrid = openEmptyNeighbours(tilesGrid, x, y);
     if (tilesGrid?.length) {
       tilesGrid[0][0].isOpen = true;
     }
   };
 
+  const isWin = () => {
+    // let cont
+  };
+
+  const openEmptyNeighbours = (grid: ITileProps[][], x: number, y: number): ITileProps[][] => {
+    for(let i = -1; i <= 1; i++) {
+      for(let j = -1; j <= 1; j++) {
+          if (j === 0 && i === 0) {
+              continue;
+          }
+          let checkX = x + i, checkY = y + j;
+          if (grid[checkY] && grid[checkY][checkX]) {
+            let cell = grid[checkY][checkX];
+            if (!cell.isOpen && cell.minesAround === 0) {
+              cell.isOpen = true;
+              openEmptyNeighbours(grid, checkX, checkY);
+            }
+          }
+      }
+    }
+    return grid;
+  };
+
   const isMine = (mines: IMinesMap, x: number, y: number): boolean => {
-    return !!mines[x + '-'+y];
+    return !!mines[x + '-' + y];
   };
 
   const findMinesAround = (minesMap: IMinesMap, x: number, y: number): number => {
@@ -53,7 +104,7 @@ const Minefield = ({width, height, mines}: IMinefieldProps) => {
             if (j === 0 && i === 0) {
                 continue;
             }
-            if (isMine(minesMap, (x + i), (y + j)) === true) {
+            if (isMine(minesMap, (x + i), (y + j))) {
                 bombsAround++;
             }
         }
@@ -90,11 +141,11 @@ const Minefield = ({width, height, mines}: IMinefieldProps) => {
     if (grid === null ){
       return null;
     }
-    return grid.map((row) => <div>{row.map((props) => <Tile {...props} />)}</div>);
+    return grid.map((row) => <div>{row.map((props) => <Tile key={props.x + '-' + props.y} {...props} />)}</div>);
   };
 
   return (
-    <div className="Minefield">{renderTilesGrid(tilesGrid)}</div>
+    <div key="Minefield" className="Minefield">{renderTilesGrid(tilesGrid)}</div>
   );
 }
 

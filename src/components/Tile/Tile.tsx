@@ -8,7 +8,7 @@ export interface ITileProps {
   isOpen: boolean;
   isFlagged: boolean;
   minesAround: number;
-  onClick: (x: number, y: number) => void;
+  onClick: (x: number, y: number, isFlag: boolean) => void;
 }
 
 const Tile = ({x, y, isMine, isOpen, isFlagged, minesAround, onClick}: ITileProps) => {
@@ -22,7 +22,7 @@ const Tile = ({x, y, isMine, isOpen, isFlagged, minesAround, onClick}: ITileProp
   }
 
   return (
-    <div className="Tile" onClick={() => onClick(x, y)}>
+    <div className="Tile" onClick={(e) => onClick(x, y, e.shiftKey)}>
       <div className="Tile-content">{label}</div>
     </div>
   );
