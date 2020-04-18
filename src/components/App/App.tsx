@@ -13,6 +13,9 @@ const App = () => {
   const [displayMenu, setDisplayMenu] = useState<boolean|string>(true);
 
   const handleGameStart = (width: number, height: number, mines: number) => {
+    if (mines > width * height) {
+      mines = width * height;
+    }
     setWidthValue(width);
     setHeightValue(height);
     setMinesValue(mines);
@@ -22,11 +25,11 @@ const App = () => {
   };
 
   const handleMineReveal = () => {
-    setDisplayMenu('WASTED 💥');
+    setDisplayMenu('💥You blown up!');
   };
   
   const handleAllMinesFlagged = () => {
-    setDisplayMenu('You win 🏆');
+    setDisplayMenu('🏆 You win!');
   };
   
   const handleMenuButtonClick = () => {
@@ -34,7 +37,11 @@ const App = () => {
   };
 
   const handleFlagsChange = (k: number) => {
-    setFlagsCount(flagsCount => (flagsCount + k) >= 0 ? (flagsCount + k) : 0);
+    const changedValue = (flagsCount + k);
+    if (changedValue < 0) {
+      return alert('No flags available');
+    }
+    setFlagsCount(flagsCount => changedValue >= 0 ? changedValue : 0);
   };
 
   return (

@@ -12,6 +12,7 @@ export interface ITileProps {
 }
 
 const Tile = ({x, y, isMine, isOpen, isFlagged, minesAround, onClick}: ITileProps) => {
+  const classNames = ['Tile'];
   let label = '';  
   if (isOpen && isMine) {
     label = '💣';
@@ -19,9 +20,15 @@ const Tile = ({x, y, isMine, isOpen, isFlagged, minesAround, onClick}: ITileProp
     label = minesAround + '';
   } else if (!isOpen && isFlagged) {
     label = '⚑';
+    classNames.push('Tile--flagged');
   }
+
+  if (isOpen) {
+    classNames.push('Tile--is-open');
+  }
+
   return (
-    <div className="Tile" onClick={(e) => onClick(x, y, e.shiftKey)}>
+    <div className={classNames.join(' ')} onClick={(e) => {onClick(x, y, e.shiftKey); }}>
       <div className="Tile-content">{label}</div>
     </div>
   );

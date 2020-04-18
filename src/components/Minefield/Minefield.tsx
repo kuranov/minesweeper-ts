@@ -71,6 +71,8 @@ const Minefield = ({
         if (isAllMinesFlagged()) {
           onAllMinesFlagged();
         }
+      } else if (flagsCount === 0) {
+        onFlagsChanged(-1);
       }
     } else if (!cell.isOpen && !cell.isFlagged) {
       cell.isOpen = true;
@@ -144,7 +146,7 @@ const Minefield = ({
   };
 
   const plantMines = (width: number, height: number, minesAmount: number): {[key: string]: boolean} => {
-    const randTo = (to: number): number => Math.round(Math.random() * to);
+    const randTo = (to: number): number => Math.round(Math.random() * (to - 1));
     const mines: any = {};
     while(minesAmount > 0) {
       let x = randTo(width), y = randTo(height);
@@ -161,7 +163,7 @@ const Minefield = ({
       return null;
     }
     return tilesGrid.map((row, i) => 
-      <div key={i}>
+      <div className="Minifield-row" key={i}>
         {row.map((props) => 
           <Tile key={props.x + '-' + props.y} {...props} onClick={handleTileClick} />
         )}

@@ -1,9 +1,27 @@
 .Tile
-    width: 20px
-    height: 20px
-    border: 1px solid #666666
-    margin: 2px
+    background: #efefef
+    overflow: hidden
+    border: 1px solid #ccc
     display: flex
     justify-content: center
     align-items: center
-    cursor: pointer;
+    cursor: pointer
+    flex: 1 0 auto
+    height: auto
+    user-select: none
+
+.Tile:before 
+    content: ' '
+    float: left
+    padding-top: 100%
+
+.Tile--is-open
+    background: #fff
+
+.Tile--flagged
+    background: #ddd
+    border: 1px solid #bbb
+
+.Tile-content
+    position: absolute
+    font-size: 14px
