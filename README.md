@@ -1,19 +1,23 @@
 ## Minesweeper: ReactJS\<TypeScript>
+
 Implementation of classic computer game using `ReactJS`, `TypeScript` and `SASS`
 
 ## Game Elements
+
 On the game screen player see:
 
-* *Panel* — on top of the screen, contains information about available flags amount and start menu button
-* *Menu* — form with main game parameters and start button
-* *Minefield* — main game area with tiles
-* *Tile* — closed by default area, needed to reveal by user
+* *Panel* — on top of the screen, contains information about available flags amount and start menu button;
+* *Menu* — form with main game parameters and start button;
+* *Minefield* — main game area with tiles;
+* *Tile* — closed by default area, needed to be revealed by player.
 
 ## Features
-Board is configurable width, height and mines number.
-The board supports dimentions up 300x300.
 
-Game displays an indication of the number of remaining flags above the board.
+Board is configurable width, height and mines number.
+
+The board supports dimentions up to 300x300.
+
+Display an indication of the number of remaining flags above the board.
 
 Click on cell reveals the value underneath it:
 * If it is a mine, you lose;
@@ -22,7 +26,7 @@ Click on cell reveals the value underneath it:
 
 * If there are no mines around the cell, reveal all cells around it and and all cells around any adjacent empty cell.
 
-Shift button + Left Mouse Click puts or removes a flag on that cell. (and updates the number of remaining flags)
+Shift button + Left Mouse Click puts or removes a flag on that cell (and updates the number of remaining flags).
 
 Display alert if player tries to add a flag but he does not have any remaining flags.
 
