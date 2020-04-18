@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, FunctionComponent } from 'react';
 import Tile, {ITileProps} from '../Tile/Tile';
 import './Minefield.sass';
 
@@ -26,7 +26,7 @@ interface IMinesMap {
   [key: string]: boolean;
 }
 
-const Minefield = ({
+const Minefield: FunctionComponent<IMinefieldProps> = ({
   width, 
   height, 
   mines, 
@@ -40,6 +40,8 @@ const Minefield = ({
 
   useEffect(() => {     
     const plantedMines = plantMines(width, height, mines);
+    console.log('width', width);
+    console.log('height', height);
     const tilesGrid = generateTilesGrid(width, height, (x, y) => {
       return {
         x, 

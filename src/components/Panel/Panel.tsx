@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FunctionComponent } from 'react';
 import './Panel.sass';
 
 interface IPanelProps {
@@ -6,7 +6,7 @@ interface IPanelProps {
   onMenuButtonClick: () => void;
 }
 
-function Panel({flagsCount, onMenuButtonClick}: IPanelProps) {
+const Panel: FunctionComponent<IPanelProps> = ({flagsCount, onMenuButtonClick}: IPanelProps) => {
   return (
     <div className="Panel">
       <div className="Panel-menu-btn" onClick={onMenuButtonClick}>New game</div>

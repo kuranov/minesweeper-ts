@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, FunctionComponent } from 'react';
 import './App.sass';
 import Menu from '../Menu/Menu';
 import Panel from '../Panel/Panel';
 import Minefield from '../Minefield/Minefield';
 
-const App = () => {
+const App: FunctionComponent = () => {
   const [width, setWidthValue] = useState<number>(0);
   const [height, setHeightValue] = useState<number>(0);
   const [mines, setMinesValue] = useState<number>(0);

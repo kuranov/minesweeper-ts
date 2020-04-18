@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FunctionComponent } from 'react';
 import './Tile.sass';
 
 export interface ITileProps {
@@ -11,7 +11,7 @@ export interface ITileProps {
   onClick: (x: number, y: number, isFlag: boolean) => void;
 }
 
-const Tile = ({x, y, isMine, isOpen, isFlagged, minesAround, onClick}: ITileProps) => {
+const Tile: FunctionComponent<ITileProps> = ({x, y, isMine, isOpen, isFlagged, minesAround, onClick}: ITileProps) => {
   const classNames = ['Tile'];
   let label = '';  
   if (isOpen && isMine) {

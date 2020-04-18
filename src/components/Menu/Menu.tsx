@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, FunctionComponent } from 'react';
 import './Menu.sass'
 
 interface IMenuProps {
@@ -10,7 +10,7 @@ interface IMenuProps {
   display: string | boolean; 
 }
 
-const Menu = ({onGameStarted, display}: IMenuProps) => {
+const Menu: FunctionComponent<IMenuProps> = ({onGameStarted, display}: IMenuProps) => {
   const [width, setWidthValue] = useState(10);
   const [height, setHeightValue] = useState(10);
   const [mines, setMinesValue] = useState(4);
