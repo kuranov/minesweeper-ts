@@ -1,14 +1,14 @@
 import React, { useState, useEffect, FunctionComponent } from 'react';
 import Tile, {ITileProps} from '../Tile/Tile';
 import './Minefield.sass';
+import { Queue } from '../../data-structures/queue';
 
 interface IMinefieldProps {
   width: number;
   height: number;
   mines: number;
-  flagsCount: number;
   startedAt: Date;
-  onFlagsChanged: (flagsCount: number) => void;
+  onFlagsChanged: (k: number) => void;
   onMineRevealed: () => void;
   onAllMinesFlagged: () => void;
 }
@@ -30,7 +30,6 @@ const Minefield: FunctionComponent<IMinefieldProps> = ({
   width, 
   height, 
   mines, 
-  flagsCount, 
   startedAt, 
   onFlagsChanged,
   onMineRevealed,
@@ -40,8 +39,6 @@ const Minefield: FunctionComponent<IMinefieldProps> = ({
 
   useEffect(() => {     
     const plantedMines = plantMines(width, height, mines);
-    console.log('width', width);
-    console.log('height', height);
     const tilesGrid = generateTilesGrid(width, height, (x, y) => {
       return {
         x, 
@@ -66,14 +63,11 @@ const Minefield: FunctionComponent<IMinefieldProps> = ({
       if (cell.isFlagged) {
         cell.isFlagged = false;
         onFlagsChanged(1);
-      } else if (flagsCount > 0) {
+      } else {
         cell.isFlagged = true;
-        onFlagsChanged(-1);
-
         if (isAllMinesFlagged()) {
           onAllMinesFlagged();
         }
-      } else if (flagsCount === 0) {
         onFlagsChanged(-1);
       }
     } else if (!cell.isOpen && !cell.isFlagged) {
@@ -98,27 +92,36 @@ const Minefield: FunctionComponent<IMinefieldProps> = ({
   };
 
   const openEmptyNeighbours = (x: number, y: number): ITileData[][] | null => {
-    for(let i = -1; i <= 1; i++) {
-      for(let j = -1; j <= 1; j++) {
-          if (j === 0 && i === 0) {
-              continue;
+    const q = new Queue<number[]>();
+    q.enqueue([x, y]);
+
+    while(q.size > 0) {
+      const coords = q.dequeue();
+      if (coords) {
+        const [x, y] = coords;
+        for(let i = -1; i <= 1; i++) {
+          for(let j = -1; j <= 1; j++) {
+              if (j === 0 && i === 0) {
+                  continue;
+              }
+              let checkX = x + i, checkY = y + j;
+              if (tilesGrid && tilesGrid[checkY] && tilesGrid[checkY][checkX]) {
+                let cell = tilesGrid[checkY][checkX];
+                if (!cell.isOpen && cell.minesAround === 0) {
+                  cell.isOpen = true;
+                  q.enqueue([checkX, checkY]);
+                }
+              }
           }
-          let checkX = x + i, checkY = y + j;
-          if (tilesGrid && tilesGrid[checkY] && tilesGrid[checkY][checkX]) {
-            let cell = tilesGrid[checkY][checkX];
-            if (!cell.isOpen && cell.minesAround === 0) {
-              cell.isOpen = true;
-              openEmptyNeighbours(checkX, checkY);
-            }
-          }
+        }
       }
     }
+    
     return tilesGrid;
   };
 
-  const isMine = (mines: IMinesMap, x: number, y: number): boolean => {
-    return !!mines[x + '-' + y];
-  };
+
+  const isMine = (mines: IMinesMap, x: number, y: number): boolean => !!mines[x + '-' + y];
 
   const findMinesAround = (minesMap: IMinesMap, x: number, y: number): number => {
     let bombsAround = 0;
