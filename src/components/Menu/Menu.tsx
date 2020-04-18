@@ -15,13 +15,8 @@ const Menu: FunctionComponent<IMenuProps> = ({onGameStarted, display}: IMenuProp
   const [height, setHeightValue] = useState(10);
   const [mines, setMinesValue] = useState(4);
   
-  let menuMessage;
-  if (typeof display === 'string') {
-    menuMessage = <div className="Menu-message">
-      {display}
-    </div>;
-  }
-  
+  let menuMessage = typeof display === 'string' ? <div className="Menu-message">{display}</div> : null;
+
   return (
     <div className="Menu" style={{display: display !== false ? 'flex' : 'none'}}>
       <div className="Menu-panel">
