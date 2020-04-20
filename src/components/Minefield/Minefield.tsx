@@ -8,6 +8,7 @@ interface IMinefieldProps {
   height: number;
   mines: number;
   startedAt: Date;
+  isFlagsAvailable: boolean,
   onFlagsChanged: (k: number) => void;
   onMineRevealed: () => void;
   onAllMinesFlagged: () => void;
@@ -31,6 +32,7 @@ const Minefield: FunctionComponent<IMinefieldProps> = ({
   height, 
   mines, 
   startedAt, 
+  isFlagsAvailable,
   onFlagsChanged,
   onMineRevealed,
   onAllMinesFlagged
@@ -62,9 +64,11 @@ const Minefield: FunctionComponent<IMinefieldProps> = ({
         cell.isFlagged = false;
         onFlagsChanged(1);
       } else {
-        cell.isFlagged = true;
-        if (isAllMinesFlagged()) {
-          onAllMinesFlagged();
+        if (isFlagsAvailable) {
+          cell.isFlagged = true;
+          if (isAllMinesFlagged()) {
+            onAllMinesFlagged();
+          }
         }
         onFlagsChanged(-1);
       }

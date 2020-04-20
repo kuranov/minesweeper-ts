@@ -54,6 +54,7 @@ const App: FunctionComponent = () => {
 
         <Minefield width={width} height={height} mines={mines} 
           startedAt={startedAt} 
+          isFlagsAvailable={flagsCount > 0}
           onFlagsChanged={handleFlagsChange} 
           onMineRevealed={handleMineReveal}
           onAllMinesFlagged={handleAllMinesFlagged} />
